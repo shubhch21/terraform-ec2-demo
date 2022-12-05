@@ -8,5 +8,6 @@ resource "aws_instance" "ec2_demo" {
   instance_type = "t2.micro"
   tags = {
     Name = "Created_By_Terraform"
+    Application = "CRMS"
   }
 }
