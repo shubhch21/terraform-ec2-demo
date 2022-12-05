@@ -1,13 +1,21 @@
-
-provider "aws" {
-  region = "ap-south-1"
-}
-
 resource "aws_instance" "ec2_demo" {
-  ami           = "ami-079b5e5b3971bd10d"
-  instance_type = "t2.micro"
+  ami                    = var.ami_id
+  instance_type          = var.instance_type
+  key_name               = var.key_name
+  subnet_id              = "subnet-080c004d142849a6f"
+  vpc_security_group_ids = [aws_security_group.ec2_demo_sg.id]
+
   tags = {
-    Name = "Created_By_Terraform"
-    Application = "CRMS"
+    Name = "Created_By_Terraform_Automation"
   }
+
+  user_data = <<-EOF
+              #!/bin/bash
+                yum update -y
+                yum install -y httpd
+                systemctl start httpd.service
+                systemctl enable httpd.service
+                echo "Welcome to Terraform Demo!!!, I am $(hostname -f) hosted by Terraform" > /var/www/html/index.html
+              EOF
+
 }
